@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.boomi.beebay.Firstconnector</groupId>
+    <artifactId>s3-connector</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <name> S3 bucket Connector </name>
+
+
+    <!-- Specification of the Boomi SDK repository -->
+    <repositories>
+        <repository>
+            <id>boomisdk</id>
+            <name>Connector SDK Repository</name>
+            <url>https://boomisdk.s3.amazonaws.com/releases</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <!-- Specify what boomi SDK version we want -->
+        <boomi.sdk.version>2.8.0</boomi.sdk.version>
+        <!-- Boomi Utilities for ease of development -->
+        <boomi.util>2.3.8</boomi.util>
+    </properties>
+
+    <dependencies>
+        <!--  Boomi Dependencies -->
+        <dependency>
+            <groupId>com.boomi.connsdk</groupId>
+            <artifactId>connector-sdk-api</artifactId>
+            <version>${boomi.sdk.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.boomi.connsdk</groupId>
+            <artifactId>connector-sdk-util</artifactId>
+            <version>${boomi.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.boomi.util</groupId>
+            <artifactId>boomi-util</artifactId>
+            <version>${boomi.util}</version>
+            <scope>provided</scope>
+        </dependency>
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>1.12.565</version>
+      </dependency>
+
+
+    </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration combine.self="override">
+          <descriptors>
+            <descriptor>src/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

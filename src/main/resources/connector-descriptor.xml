@@ -1,0 +1,18 @@
+<GenericConnectorDescriptor >
+<field id="aws_access_key_id" label="AWS_ACCESS_KEY_ID" type="string">
+  <helpText>Enter the AWS_ACCESS_KEY_ID</helpText>
+</field>
+<field id="aws_secret_access_key" label="AWS_SECRET_ACCESS_KEY" type="string">
+  <helpText>Enter the AWS_SECRET_ACCESS_KEY</helpText>
+</field>
+
+<operation types="GET">
+<field id="bucketName" label="BUCKET_NAME" type="string">
+  <helpText>Enter the bucketName</helpText>
+</field>
+<field id="objectKey" label="OBJECT_KEY" type="string">
+  <helpText>Enter the objectKey</helpText>
+</field>
+
+</operation>
+</GenericConnectorDescriptor>
