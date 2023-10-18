@@ -1,4 +1,4 @@
-<GenericConnectorDescriptor >
+<GenericConnectorDescriptor requireConnectionForBrowse="true">
 <field id="aws_access_key_id" label="AWS_ACCESS_KEY_ID" type="string">
   <helpText>Enter the AWS_ACCESS_KEY_ID</helpText>
 </field>

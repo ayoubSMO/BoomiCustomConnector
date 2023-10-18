@@ -6,15 +6,16 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.boomi.beebay.s3BucketConnector.S3BucketConnection;
 import com.boomi.beebay.s3BucketConnector.utils.Util;
 import com.boomi.connector.api.*;
 import com.boomi.connector.util.BaseGetOperation;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,41 +57,31 @@ public class S3BucketGetOperation extends BaseGetOperation {
     logger.log(Level.FINE, "The bucket name retrieved from get operation is ; " + props.getProperty(Util.BUCKET_NAME) + Util.BUCKET_NAME);
     logger.log(Level.FINE, "The object key retrieved from get operation is ; " + props.getProperty(Util.FOLDER_PATH) + Util.FOLDER_PATH);
     logger.log(Level.FINE, getConnection().getS3BucketObjectKey());
-    //GetObjectRequest getObjectRequest = new GetObjectRequest(props.getProperty(Util.BUCKET_NAME), props.getProperty(Util.FOLDER_PATH));
+    GetObjectRequest getObjectRequest = new GetObjectRequest(props.getProperty(Util.BUCKET_NAME), props.getProperty(Util.FOLDER_PATH));
     logger.log(Level.FINE, "Connection is maded successfully 22");
     try {
+      S3Object s3Object = s3client.getObject(getObjectRequest);
+      logger.log(Level.FINE, "Connection is maded successfully 33");
+      S3ObjectInputStream objectContent = s3Object.getObjectContent();
+      logger.log(Level.FINE, "Connection is maded successfully 44");
 
-      // Retrieve data from s3 bucket
+      // Download the object's content to a ByteArrayOutputStream
 
-      ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(props.getProperty(Util.BUCKET_NAME));
-      List<S3ObjectSummary> objectSummaries = s3client.listObjects(listObjectsRequest).getObjectSummaries();
-
-
-      for (S3ObjectSummary objectSummary : objectSummaries) {
-        String objectKey = objectSummary.getKey();
-        S3Object s3Object = s3client.getObject(props.getProperty(Util.BUCKET_NAME), objectKey);
-        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        try {
-          while ((len = objectInputStream.read(buffer)) != -1) {
-            byteArrayOutputStream.write(buffer, 0, len);
-          }
-        ResponseUtil.addSuccess(operationResponse, requestData, String.valueOf(200),
-            ResponseUtil.toPayload(byteArrayOutputStream));
-
-
-          // At this point, the object content is in the byteArrayOutputStream.
-          // You can access it as a byte array using byteArrayOutputStream.toByteArray().
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      byte[] buffer = new byte[4096];
+      int bytesRead;
+      logger.log(Level.FINE, "Connection is maded successfully 55");
+      while ((bytesRead = objectContent.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
       }
+      logger.log(Level.FINE, "Connection is maded successfully 66");
+      ResponseUtil.addSuccess(operationResponse, requestData, String.valueOf(200),
+        ResponseUtil.toPayload(outputStream));
+      logger.log(Level.FINE, "Connection is maded successfully 77");
+      logger.log(Level.FINE, "Object is retrieved succefully");
     } catch (Exception e) {
       logger.log(Level.SEVERE,e.getMessage());
       ResponseUtil.addExceptionFailure(operationResponse,request.getObjectId(),e);
     }
   }
-  }
+}
